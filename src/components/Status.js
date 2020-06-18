@@ -8,13 +8,17 @@ function Status(props) {
 
         let status = "";
         if (winner) {
-        status = "Winner: " + winner;
+        status = isOnePlayer ? 
+            winner === "O" ? "Computer Wins!" : "You Win!"
+            : 
+            "Winner: " + winner;
         } 
         else if (stepNumber === 9 && winner === null){
         status = "Draw!"
         }
         else {
-        status = isOnePlayer ? "Player: X | Computer: O" : 
+        status = isOnePlayer ? 
+            "Human Vs Computer!" : 
             ("Next player: " + (xIsNext ? "X" : "O"));
         }
         

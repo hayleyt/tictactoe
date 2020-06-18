@@ -10,34 +10,29 @@ class Game extends React.Component {
             squares: Array(9).fill(null)
           }
         ],
+        squares: [],
         stepNumber: 0,
         xIsNext: true,
         isOnePlayer: true
       };
 
   handleClick = (i) => {
-    const {xIsNext, isOnePlayer} = this.state;
+    const {xIsNext,isOnePlayer,stepNumber} = this.state;
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
+
     if(isOnePlayer){
       squares[i] = "X";
-      let randNum = Math.floor(Math.random() * 9);
-      if(squares.includes(null)){
-        while (squares[randNum] != null){
-          randNum = Math.floor(Math.random() * 9);
-        }
-      }
-      if(!calculateWinner(squares)){
-        squares[randNum] = "O"
-      }
+
       this.setState({
         history: history.concat([{squares: squares}]),
         stepNumber: history.length,
-        xIsNext: true
+        xIsNext: false
       });
     }
     else {
@@ -64,12 +59,17 @@ class Game extends React.Component {
   }
 
   handleTimeTravel = (e) => {
-    const stepMinusOne = this.state.stepNumber - 1;
-    const stepPlusOne = this.state.stepNumber + 1;
-    const maxStep = this.state.history.length - 1;
-    const lastStep = stepMinusOne >= 0 ? stepMinusOne : 0;
-    const nextStep = stepPlusOne <= maxStep ? stepPlusOne : maxStep;
-    e.target.name === "back" ? this.jumpTo(lastStep) : this.jumpTo(nextStep)
+    const {history,stepNumber,isOnePlayer} = this.state;
+    const maxStep = history.length - 1;
+    const lastStepOnePlayer = (stepNumber-2) >= 0 ? (stepNumber-2) : 0;
+    const nextStepOnePlayer = (stepNumber+2) <= maxStep ? (stepNumber+2) : maxStep;
+    const lastStep = (stepNumber-1) >= 0 ? (stepNumber-1) : 0;
+    const nextStep = (stepNumber+1) <= maxStep ? (stepNumber+1) : maxStep;
+    if(isOnePlayer){
+      e.target.name === "back" ? this.jumpTo(lastStepOnePlayer) : this.jumpTo(nextStepOnePlayer);
+    } else {
+      e.target.name === "back" ? this.jumpTo(lastStep) : this.jumpTo(nextStep);
+    }
   }
 
   jumpTo = (step) => {
@@ -88,38 +88,81 @@ class Game extends React.Component {
     }
   }
 
+  handleChange = () => {
+    const {xIsNext,isOnePlayer} = this.state;
+    if(xIsNext || (isOnePlayer === false)) {
+      return;
+    }
+    setTimeout(() => {
+      this.computerPlaysTurn()
+    }, 400)
+
+  }
+
+  computerPlaysTurn = () => {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
+    console.log(current)
+    let randNum = Math.floor(Math.random() * 9);
+    if(squares.includes(null)){
+      while (squares[randNum] != null){
+        randNum = Math.floor(Math.random() * 9);
+      }
+    }
+    if(!calculateWinner(squares)){
+      squares[randNum] = "O"
+    }
+    this.setState({
+      history: history.concat([{squares: squares}]),
+      stepNumber: history.length,
+      xIsNext: true
+    });
+  }
+
   render() {
     const {history,stepNumber} = this.state
     return (
       <div className="game">
-        <Status data={this.state} />
-        <div>
-            <button 
-                name="one-player" 
-                onClick={this.handlePlayers}
-                className={this.state.isOnePlayer ? "selected" : ""}>
-            1 Player
-            </button>
-            <button 
-                name="two-player" 
-                onClick={this.handlePlayers}
-                className={this.state.isOnePlayer ? "" : "selected"}>
-            2 Players
-            </button>
+
+        <div className="header">
+          <h1>Play Tic Tac Toe</h1>
+          <div className="status">
+            <Status data={this.state} /> 
+          </div>
+          <div className="player-buttons">
+              <button 
+                  name="one-player" 
+                  onClick={this.handlePlayers}
+                  className={this.state.isOnePlayer ? "selected" : ""}>
+              1 Player
+              </button>
+              <button 
+                  name="two-player" 
+                  onClick={this.handlePlayers}
+                  className={this.state.isOnePlayer ? "" : "selected"}>
+              2 Players
+              </button>
+          </div>
         </div>
+
         <div className="game-board">
           <Board
             squares={history[stepNumber].squares}
             onClick={i => this.handleClick(i)}
+            onChange={this.handleChange()}
           />
         </div>
-        <div>
+
+        <div className="time-travel-buttons">
           <button name="back" onClick={this.handleTimeTravel}>Go Back</button>
           <button name="forward" onClick={this.handleTimeTravel}>Go Forward</button>
         </div>
-        <div>
+
+        <div className="new-game-button">
           <button onClick={this.newGame}>New Game</button>
         </div>
+
       </div>
     );
   }
