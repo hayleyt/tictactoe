@@ -4,7 +4,7 @@ body {
 }
 
 .game{
-    max-width: 450px;
+    max-width: 270px;
     margin: auto;
 }
 
@@ -15,12 +15,12 @@ body {
 }
 
 .header, .player-buttons, .time-travel-buttons, .new-game-button{
-    margin: 20px auto;
+    margin: 10px auto;
     text-align: center;
 }
 
 button{
-    width: 150px;
+    width: 200px;
     height: 40px;
     background: #fff;
     border: 1px solid #999;
@@ -39,7 +39,7 @@ button{
 }
 
 .status {
-    font-size: 30px;
+    font-size: 24px;
     margin-bottom: 0px;
 }
 
@@ -50,12 +50,12 @@ button{
     font-size: 50px;
     font-weight: bold;
     line-height: 34px;
-    height: 150px;
+    height: 90px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 150px;
+    width: 90px;
 }
 
 .square:focus {

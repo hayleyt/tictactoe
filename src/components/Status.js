@@ -18,7 +18,7 @@ function Status(props) {
         }
         else {
         status = isOnePlayer ? 
-            "Human Vs Computer!" : 
+            "Human vs Computer!" : 
             ("Next player: " + (xIsNext ? "X" : "O"));
         }
         

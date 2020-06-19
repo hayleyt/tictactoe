@@ -18,7 +18,7 @@ class Game extends React.Component {
 
   handleClick = (i) => {
     const {xIsNext,isOnePlayer,stepNumber} = this.state;
-    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const history = this.state.history.slice(0, stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
 
@@ -45,52 +45,9 @@ class Game extends React.Component {
     }
   }
 
-  newGame = () => {
-    this.setState({
-      history: [
-        {
-          squares: Array(9).fill(null)
-        }
-      ],
-      stepNumber: 0,
-      xIsNext: true,
-      isOnePlayer: true
-    })
-  }
-
-  handleTimeTravel = (e) => {
-    const {history,stepNumber,isOnePlayer} = this.state;
-    const maxStep = history.length - 1;
-    const lastStepOnePlayer = (stepNumber-2) >= 0 ? (stepNumber-2) : 0;
-    const nextStepOnePlayer = (stepNumber+2) <= maxStep ? (stepNumber+2) : maxStep;
-    const lastStep = (stepNumber-1) >= 0 ? (stepNumber-1) : 0;
-    const nextStep = (stepNumber+1) <= maxStep ? (stepNumber+1) : maxStep;
-    if(isOnePlayer){
-      e.target.name === "back" ? this.jumpTo(lastStepOnePlayer) : this.jumpTo(nextStepOnePlayer);
-    } else {
-      e.target.name === "back" ? this.jumpTo(lastStep) : this.jumpTo(nextStep);
-    }
-  }
-
-  jumpTo = (step) => {
-    this.setState({
-      stepNumber: step,
-      xIsNext: this.state.isOnePlayer ? true : (step % 2) === 0
-    });
-
-  }
-
-  handlePlayers = (e) => {
-    if(this.state.history.length === 1){
-      e.target.name === "one-player" ?
-      this.setState({isOnePlayer: true}) :
-      this.setState({isOnePlayer: false});
-    }
-  }
-
   handleChange = () => {
-    const {xIsNext,isOnePlayer} = this.state;
-    if(xIsNext || (isOnePlayer === false)) {
+    const {xIsNext,isOnePlayer,stepNumber} = this.state;
+    if( (isOnePlayer === false) || stepNumber === 9 || xIsNext) {
       return;
     }
     setTimeout(() => {
@@ -118,6 +75,74 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: true
     });
+  }
+
+  newGame = () => {
+    this.setState({
+      history: [
+        {
+          squares: Array(9).fill(null)
+        }
+      ],
+      stepNumber: 0,
+      xIsNext: true,
+      isOnePlayer: true
+    })
+  }
+
+  handleTimeTravel = () => {
+    const {stepNumber,isOnePlayer} = this.state;
+    const backOne = (stepNumber-1) > 0 ? (stepNumber-1) : 0;
+    const backTwo = (stepNumber-2) > 1 ? (stepNumber-2) : 0;
+
+    if(isOnePlayer){
+      if(stepNumber === 9){
+        this.jumpTo(backOne) 
+      } else{
+        this.jumpTo(backTwo)
+      }
+    } 
+    else {
+      this.jumpTo(backOne) 
+    }
+  }
+
+  jumpTo = (step) => {
+    let history = this.state.history.splice().pop()
+    console.log(history)
+    
+    if (this.state.isOnePlayer){
+      this.setState({
+        stepNumber: step,
+        xIsNext: true
+      });
+    }
+    else{
+      this.setState({
+        stepNumber: step,
+        xIsNext: (step % 2) === 0
+      });
+    }
+
+  }
+
+  handlePlayers = (e) => {
+    const isNewGame = this.state.history.length === 1
+    if(isNewGame && e.target.name === "one-player"){
+      this.setState({isOnePlayer: true})
+    } 
+    else if(isNewGame && e.target.name === "two-player") {
+      this.setState({isOnePlayer: false});
+    }
+    else if(!isNewGame && e.target.name === "two-player")
+    {
+      this.newGame()
+      this.setState({isOnePlayer: false});
+    }
+    else{
+      this.newGame()
+      this.setState({isOnePlayer: true});
+    }
   }
 
   render() {
@@ -155,12 +180,11 @@ class Game extends React.Component {
         </div>
 
         <div className="time-travel-buttons">
-          <button name="back" onClick={this.handleTimeTravel}>Go Back</button>
-          <button name="forward" onClick={this.handleTimeTravel}>Go Forward</button>
+          <button name="back" onClick={this.handleTimeTravel}>Step Back</button>
         </div>
 
         <div className="new-game-button">
-          <button onClick={this.newGame}>New Game</button>
+          <button onClick={this.newGame}>Start New Game</button>
         </div>
 
       </div>
