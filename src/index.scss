@@ -1,65 +1,159 @@
-body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
+@import 'normalize.css';
+
+//variables - colours
+$strip: #999;
+$body: #333;
+$squares: #444;
+$text: white;
+$buttonText: #999;
+$xText: black;
+$footerText: #999;
+$xBg: white;
+$oText: white;
+$oBg: black;
+$varela: 'Varela Round', sans-serif;
+
+//grid - screen 768px and bigger
+.page {
+    position: absolute; left: 0; right: 0;
+    margin: auto;
+    width: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 20px auto 400px 300px auto;
+    grid-template-rows: 30px 100px 300px 50px 4fr 40px;
+    grid-template-areas:
+        "strip logo . . ."
+        "strip . . winner ."
+        "strip . header board ."
+        "strip . . back ."
+        "strip . . . . "
+        "strip . footer footer .";
+}
+.left-strip {grid-area: strip;}
+.logo {grid-area: logo;}
+.winner {grid-area: winner;}
+.header {grid-area: header;}
+.board {grid-area: board;}
+.controls {grid-area: back;}
+footer {grid-area: footer;}
+
+//grid - screen 767px and smaller
+@media only screen and (max-width: 767px) {
+    .page {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 80px 300px 50px 50px 30px;
+        grid-template-areas:
+            "header"
+            "winner"
+            "board"
+            "back"
+            "."
+            "footer";
+    }
+    .header {
+        justify-items: center;
+        text-align: center;
+    }
+    .board, .controls {
+        margin: auto;
+    }
+    footer {
+        margin: auto;
+    }
 }
 
-.game{
-    max-width: 270px;
+//colours and fonts
+.left-strip {background: $strip;}
+.page {
+    background: $body;
+    color: $text;
+    font-family: $varela;
+    letter-spacing: -1px;
+}
+
+//buttons
+button:focus {
+    outline: none;
+}
+.header-buttons>button, .player-buttons>button, .step-back {
+    background: $body;
+    color: $buttonText;
+    font-size: 16px;
+    padding: 12px 24px;
+    margin: 5px 5px 5px 0;
+    border-radius: 24px;
+    border: 1px solid $buttonText
+}
+button.selected {
+    color: $body;
+    border-color: $body;
+    background: $buttonText;
+}
+
+//Winner
+.winner {
     margin: auto;
 }
 
+//controls
+.controls {
+    display: flex;
+    flex-direction: row-reverse;
+    .step-back{
+        margin: 5px;
+        padding: 10px 20px;
+        border-radius: 20px;
+    }
+    .space{
+        flex-grow: 1;
+    }
+    .move{
+        margin: 10px;
+    }
+}
+
+//footer
+footer {
+    height: 40px;
+    &>p{
+        color: $footerText;
+        margin: auto;
+    }
+}
+
+//board
 .board-row:after {
     clear: both;
     content: "";
     display: table;
 }
 
-.header, .player-buttons, .time-travel-buttons, .new-game-button{
-    margin: 10px auto;
-    text-align: center;
-}
-
-button{
-    width: 200px;
-    height: 40px;
-    background: #fff;
-    border: 1px solid #999;
-    font-size: 20px;
-    &:focus{
-        outline: none;
-    }
-    &:active{
-        background: #999;
-        color: #333;
-    }
-    &.selected{
-        background: #000;
-        color:#fff;
-    }
-}
-
-.status {
-    font-size: 24px;
-    margin-bottom: 0px;
-}
-
 .square {
-    background: #fff;
-    border: 1px solid #999;
+    background: $squares;
+    border: 3px solid $body;
+    border-radius: 8px;;
     float: left;
     font-size: 50px;
     font-weight: bold;
     line-height: 34px;
-    height: 90px;
+    height: 100px;
+    width: 100px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 90px;
-}
+    color: $text;
+    &.x-mark {
+        color: $xText;
+        background: $xBg;
+    }
+    &.o-mark {
+        color: $oText;
+        background: $oBg;
+    }
 
-.square:focus {
-    outline: none;
 }
 
 .kbd-navigation .square:focus {
@@ -69,8 +163,4 @@ button{
 .game-board {
     display: flex;
     flex-direction: row;
-}
-
-.game-info {
-    margin-left: 20px;
 }

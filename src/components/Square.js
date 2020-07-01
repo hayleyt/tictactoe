@@ -2,8 +2,14 @@ import React from 'react';
 
 function Square(props) {
     return (
-        <button className="square" onClick={props.onClick} onChange={props.onChange}>
-            {props.value}
+        <button className={
+            props.value === "X" ? "square x-mark" :
+                props.value === "O" ? "square o-mark" : "square"
+            }
+            onClick={props.onClick} 
+            onChange={props.onChange}
+            >
+                {props.value}
         </button>
     );
 }
