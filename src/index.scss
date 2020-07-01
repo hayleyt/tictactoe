@@ -1,16 +1,16 @@
 @import 'normalize.css';
 
 //variables - colours
-$strip: #999;
-$body: #333;
-$squares: #444;
+$strip: #832a2a;
+$body: #c23a3a;
+$squares: #e77a6d;
 $text: white;
-$buttonText: #999;
-$xText: black;
-$footerText: #999;
-$xBg: white;
+$buttonText: #521515;
+$footerText: $buttonText;
+$xText: white;
+$xBg: #e89300;
 $oText: white;
-$oBg: black;
+$oBg: #51967e;
 $varela: 'Varela Round', sans-serif;
 
 //grid - screen 768px and bigger
@@ -43,8 +43,9 @@ footer {grid-area: footer;}
 @media only screen and (max-width: 767px) {
     .page {
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr 80px 300px 50px 50px 30px;
+        grid-template-rows: 40px 1fr 80px 300px 50px 50px 30px;
         grid-template-areas:
+            "strip"
             "header"
             "winner"
             "board"
@@ -111,6 +112,10 @@ button.selected {
     }
     .move{
         margin: 10px;
+        padding: 5px 10px;
+        border-radius: 20px;
+        &.x-move{background: $xBg;}
+        &.o-move{background: $oBg;}
     }
 }
 

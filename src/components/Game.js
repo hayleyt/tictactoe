@@ -149,7 +149,9 @@ class Game extends React.Component {
    }
 
    render() {
-      const {history,stepNumber} = this.state
+      const {history,stepNumber,isOnePlayer} = this.state
+      const showMove = isOnePlayer ? null : <NextMove data={this.state} />
+      
       return (
          <div className="page">
             <div className="left-strip"></div>
@@ -176,17 +178,17 @@ class Game extends React.Component {
                </div>
             </div> {/* end header */}
 
-               <Winner data={this.state} />
-               <Board
-                  squares={history[stepNumber].squares}
-                  onClick={i => this.handleClick(i)}
-                  onChange={this.handleChange()}
-               />
-               <div className="controls">
-                  <NextMove data={this.state} />
-                  <div className="space"></div>
-                  <button className="step-back" name="back" onClick={this.handleTimeTravel}>shh...cheat!</button>
-               </div>
+            <Winner data={this.state} />
+            <Board
+               squares={history[stepNumber].squares}
+               onClick={i => this.handleClick(i)}
+               onChange={this.handleChange()}
+            />
+            <div className="controls">
+               {showMove}
+               <div className="space"></div>
+               <button className="step-back" name="back" onClick={this.handleTimeTravel}>shh...cheat!</button>
+            </div>
 
             <footer><p>made with {"<"}3 by Hayley Tong</p></footer>
          </div>
