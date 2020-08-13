@@ -37,5 +37,11 @@
   },
   "devDependencies": {
     "gh-pages": "^3.1.0"
+  },
+  "resolutions": {
+    "serialize-javascript": "^3.1.0",
+    "elliptic": "^6.5.3",
+    "lodash": "^4.17.19",
+    "websocket-extensions": "^0.1.4"
   }
 }
